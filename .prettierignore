@@ -1,0 +1,8 @@
+pnpm-lock.yaml
+*.md
+
+# files with special formatting
+src/hooks/useCursor.tsx
+src/hooks/useFormState.ts
+src/hooks/useToggle.ts
+src/global.d.ts
