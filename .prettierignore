@@ -6,3 +6,5 @@
 node_modules
 public
 pnpm-lock.yaml
+.git-worktrees
+.pnpm-store

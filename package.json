@@ -12,8 +12,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prettier": "prettier --write .",
-    "format": "eslint --fix",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
@@ -54,8 +54,8 @@
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
+      "eslint --fix",
+      "prettier --write"
     ],
     "*.{json,css,md}": "prettier --write"
   }
