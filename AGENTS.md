@@ -27,3 +27,7 @@ Refer to [ARCHITECTURE.md](ARCHITECTURE.md) for architecture, design guidelines 
 # Skills and tools
 
 Never read a full skill file unless performing a task within that skill's scope. Use the skill name/description and these routing notes to decide relevance first.
+
+## Shadcn UI Components
+
+You should use shadcn UI Components for consistency. When adding or updating components, follow the guidance in [`skills/shadcn/SKILL.md`](skills/shadcn/SKILL.md) for proper installation and usage with **pnpm**.

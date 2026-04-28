@@ -67,4 +67,19 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 ## Agents
 
-This project supports AI agents. Refer to [AGENTS.md](AGENTS.md) for guidelines - also useful for **humans**.
+This project supports AI agents. Refer to [./agents/README.md](.agents/README.md) for guidelines - also useful for **humans**.
+
+### Skills
+
+Discover new skills at https://github.com/vercel-labs/skills or with the CLI:
+
+```sh
+# Interactive search (fzf-style)
+npx skills find <skill-name>
+```
+
+Install with:
+
+```sh
+pnpm dlx skills add <skill-name>
+```
