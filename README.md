@@ -1,5 +1,21 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
+### Shadcn UI
+
+This project uses [shadcn/ui](https://ui.shadcn.com/) with [base-ui primitives](https://base-ui.com/react/overview/about) for UI components.
+
+Add new components from the [shadcn/ui component library](https://ui.shadcn.com/docs/components) using the CLI:
+
+
+```bash
+pnpm dlx shadcn@latest add <component-name>
+```
+Configuration file: [**components.json**](components.json)
+
+### Tailwind CSS
+
+This project uses [Tailwind CSS](https://tailwindcss.com/) for styling. You can customize the design system by editing the [**globals.css**](src/styles/globals.css) file.
+
 ## Getting Started
 
 Requirements:
