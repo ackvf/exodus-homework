@@ -62,6 +62,7 @@ const eslintConfig = defineConfig([
           },
         ],
       }],
+      "react-hooks/refs": "warn",
       quotes: ["error", "double"],
     },
   },
