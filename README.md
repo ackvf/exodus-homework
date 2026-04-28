@@ -2,23 +2,39 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Requirements:
+- Refer to [package.json](package.json)
+- Node.js >= 24
+- pnpm package manager >= 10
+
+After installing Node.js, initialize `pnpm` in your terminal:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+corepack enable
+corepack prepare
+
+# update pnpm
+corepack up
+```
+
+Then, install dependencies:
+```bash
+pnpm install
+```
+
+And start the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### API Routes and tRPC
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/health](http://localhost:3000/api/health). This endpoint can be edited in [`pages/api/health.ts`](src/pages/api/health.ts).
+
+The rest of the API layer uses [tRPC](https://trpc.io/) for type-safe client-server communication. Manage tRPC routers in [`server/routers`](src/server/routers) and call them from the client using the auto-generated React hooks exported from [`lib/trpc.ts`](src/lib/trpc.ts).
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
 

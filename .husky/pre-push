@@ -1,0 +1,7 @@
+echo "[pre-push] Validating and formatting code..."
+
+set -e
+
+pnpm typecheck
+
+pnpm format
