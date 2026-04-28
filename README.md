@@ -1,9 +1,20 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
+
+## UI
+
+The shadcn theme and color palette were generated with the [`--preset aInmZG6`](https://ui.shadcn.com/create?preset=aInmZG6&base=base) and [uicolors `#27632e`](https://uicolors.app/generate/27632e).
+
+
+### Component Library:
+- [shadcn/ui themed components](https://ui.shadcn.com/create?preset=aInmZG6&base=base)
+- [shadcn/ui component library](https://ui.shadcn.com/docs/components)
+- [base-ui primitives ](https://base-ui.com/react/overview/about)
+
+
 ### Shadcn UI
 
-This project uses [shadcn/ui](https://ui.shadcn.com/) with [base-ui primitives](https://base-ui.com/react/overview/about) for UI components.
-
+This project uses [shadcn/ui](https://ui.shadcn.com/) with [base-ui primitives](https://base-ui.com/react/overview/about) for UI components.\
 Add new components from the [shadcn/ui component library](https://ui.shadcn.com/docs/components) using the CLI:
 
 
