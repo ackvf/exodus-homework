@@ -35,8 +35,11 @@ services:
       NODE_ENV: development
       NEXT_TELEMETRY_DISABLED: "1"
       CI: "true"
-      TURBOPACK_POLLING: ${TURBOPACK_POLLING:-false}
-      TURBOPACK_POLLING_INTERVAL: ${TURBOPACK_POLLING_INTERVAL:-1000}
+      FILE_POLLING: ${FILE_POLLING:-false}
+      FILE_POLLING_INTERVAL: ${FILE_POLLING_INTERVAL:-1000}
+      CHOKIDAR_USEPOLLING: ${FILE_POLLING:-false}
+      WATCHPACK_POLLING: ${FILE_POLLING:-false}
+      WATCHPACK_POLLING_INTERVAL: ${FILE_POLLING_INTERVAL:-1000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@flare-db:5432/${POSTGRES_DB:-flare}
     ports:
       - "3000:3000"
@@ -49,7 +52,7 @@ services:
       [
         "sh",
         "-c",
-        "pnpm install --frozen-lockfile && pnpm dev --hostname 0.0.0.0 --port 3000",
+        'pnpm install --frozen-lockfile && if [ "$FILE_POLLING" = "true" ]; then pnpm exec next dev --webpack --hostname 0.0.0.0 --port 3000; else pnpm dev --hostname 0.0.0.0 --port 3000; fi',
       ]
 
 volumes:

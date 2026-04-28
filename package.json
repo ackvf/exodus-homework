@@ -14,6 +14,7 @@
     "dev:db:remove": "docker compose rm -sf flare-db",
     "dev:db:reset": "docker compose down -v flare-db",
     "dev:app:rebuild": "docker compose up --build --no-start flare-app",
+    "dev:app:reset": "docker compose rm -sfv flare-app",
     "dev:docker": "docker compose up -d",
     "dev:docker:stop": "docker compose stop",
     "dev:docker:cleanup": "docker compose down --rmi local --volumes --remove-orphans",

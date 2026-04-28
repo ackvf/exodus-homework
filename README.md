@@ -109,7 +109,7 @@ Fast local app iteration with a disposable local database.
    pnpm dev:db:stop
    ```
 
-### 3) Full Docker stack (app + db)
+### 3) Full Docker stack (app + db), local filesystem
 
 For maximum environment parity and hassle-free onboarding.
 
@@ -128,13 +128,17 @@ On Windows hosts, Docker bind mounts can miss filesystem events. Polling support
 
    _note: the frontend app may take some time to [start](http://localhost:3000/). View logs with `pnpm logs:app`._
 
-_note: this will create a large `.pnpm-store` folder in the project root because the whole project is mounted into the app container, which includes `node_modules` and pnpm store. It may take significant time on the first run because it needs to install all dependencies inside the container. Subsequent runs will be faster due to caching._
+_note: this flow creates large docker volumes for `.pnpm-store` and `node_modules`, see [docker-compose volumes](docker-compose.yml) for details. It may take significant time on the run and install. Subsequent runs will be faster due to caching. To "reinstall" `node_modules`, use `pnpm dev:app:reset`._
 
 #### Windows polling override
 
 If file changes on the host are not detected inside the app container on Windows, copy env variables for polling from [`.env.example`](.env.example).
 
-Alternative is to check out and use the repo in WSL. See https://code.visualstudio.com/docs/remote/wsl
+Alternative is to check out and use the repo in **WSL**. See https://code.visualstudio.com/docs/remote/wsl
+
+### 4) Full Docker stack (app + db), "remote" development
+
+This flow is not implemented, but it may solve live-reload issues by running the app container without mounting the local filesystem, and connecting IDE to the container for "remote" development.
 
 ### Troubleshooting and Utility scripts
 
@@ -149,8 +153,9 @@ Since our docker setup runs in the background, use these scripts to follow logs 
 Docker:
 
 - `pnpm dev:db:remove`: remove only `flare-db` container instance (use when container metadata/state is broken and you want a clean container).
-- `pnpm dev:db:reset`: remove `flare-db` data volume and recreate from scratch (use when you need a fully clean local database).
+- `pnpm dev:db:reset`: remove `flare-db` container and data volume (use when you need a fully clean local database).
 - `pnpm dev:app:rebuild`: rebuild the `flare-app` image and recreate `flare-app` container (use after changing `Dockerfile`).
+- `pnpm dev:app:reset`: remove `flare-app` container and its volumes (use for package troubleshooting / clean install, equivalent to deleting `node_modules`).
 - `pnpm dev:docker:cleanup`: remove the full compose stack, local compose images, and volumes (use when removing/reinstalling the repo).
 
 ## Agents
