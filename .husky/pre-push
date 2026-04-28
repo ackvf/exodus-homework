@@ -4,4 +4,4 @@ set -e
 
 pnpm typecheck
 
-pnpm format
+pnpm lint
