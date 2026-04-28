@@ -2,6 +2,9 @@ echo "[pre-push] Validating and formatting code..."
 
 set -e
 
+# Verify that installed dependencies match the lockfile
+pnpm install --frozen-lockfile
+
 pnpm typecheck
 
 pnpm lint
