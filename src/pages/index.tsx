@@ -7,7 +7,5 @@ export default function Home() {
     return <p>Loading...</p>
   }
 
-  return (
-    <p>{hello.data.greeting}</p>
-  )
+  return <p>{hello.data.greeting}</p>
 }

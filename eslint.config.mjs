@@ -23,56 +23,61 @@ const eslintConfig = defineConfig([
     rules: {
       "@stylistic/semi": ["error", "never"],
       "@stylistic/comma-dangle": ["warn", "always-multiline"],
-      "import/order": ["warn", {
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true,
+      "import/order": [
+        "warn",
+        {
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
+          "newlines-between": "always",
+          distinctGroup: false,
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            ["parent", "sibling", "index"],
+          ],
+          pathGroupsExcludedImportTypes: [],
+          pathGroups: [
+            {
+              pattern: "react",
+              group: "external",
+              position: "before",
+            },
+            {
+              pattern: "{@/server,@/server/**}",
+              group: "internal",
+              position: "before",
+            },
+            {
+              pattern: "{@/components,@/components/**}",
+              group: "internal",
+              position: "after",
+            },
+            {
+              pattern: "@/**",
+              group: "internal",
+            },
+            {
+              pattern: "../**",
+              group: "parent",
+              position: "before",
+            },
+            {
+              pattern: "{./,.}",
+              group: "index",
+              position: "after",
+            },
+          ],
         },
-        "newlines-between": "always",
-        "distinctGroup": false,
-        "groups": ["builtin", "external", "internal", ["parent", "sibling", "index"]],
-        "pathGroupsExcludedImportTypes": [],
-        "pathGroups": [
-          {
-            "pattern": "react",
-            "group": "external",
-            "position": "before",
-          },
-          {
-            "pattern": "{@/server,@/server/**}",
-            "group": "internal",
-            "position": "before",
-          },
-          {
-            "pattern": "{@/components,@/components/**}",
-            "group": "internal",
-            "position": "after",
-          },
-          {
-            "pattern": "@/**",
-            "group": "internal",
-          },
-          {
-            "pattern": "../**",
-            "group": "parent",
-            "position": "before",
-          },
-          {
-            "pattern": "{./,.}",
-            "group": "index",
-            "position": "after",
-          },
-        ],
-      }],
+      ],
       "react-hooks/refs": "warn",
       quotes: ["error", "double"],
     },
   },
   {
-    ignores: [
-      "**/server/**",
-      "src/pages/api/**",
-    ],
+    ignores: ["**/server/**", "src/pages/api/**"],
     rules: {
       "no-restricted-imports": [
         "error",

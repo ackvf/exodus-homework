@@ -15,8 +15,7 @@ export default createTRPCNext<AppRouter>({
           url: `${getBaseUrl()}/api/trpc`,
 
           async headers() {
-            return {
-            }
+            return {}
           },
         }),
       ],

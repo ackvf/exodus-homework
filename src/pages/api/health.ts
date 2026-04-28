@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 
 type Data = {
-  status: "ok";
-  service: string;
-  timestamp: string;
-  uptimeSeconds: number;
-  nodeEnv: string;
-  commitHash: string;
+  status: "ok"
+  service: string
+  timestamp: string
+  uptimeSeconds: number
+  nodeEnv: string
+  commitHash: string
 }
 
 type ErrorData = {
-  error: string;
+  error: string
 }
 
 export default function handler(

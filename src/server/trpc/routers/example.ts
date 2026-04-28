@@ -12,7 +12,7 @@ export const exampleRouter = router({
       }),
     )
     .query(async (opts) => {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       return {
         greeting: `hello ${opts.input.text}`,
       }

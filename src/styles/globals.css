@@ -4,7 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
 :root {
   /* Brand colors - https://uicolors.app/generate/27632e */
   --color-mnd-green-50: oklch(97.791% 0.01174 145.926);
@@ -12,14 +11,16 @@
   --color-mnd-green-200: oklch(90.562% 0.05726 148.28);
   --color-mnd-green-300: oklch(83.109% 0.10074 147.475);
   --color-mnd-green-400: oklch(73.509% 0.14301 146.358);
-  --color-mnd-green-500: oklch(64.288% 0.15610 145.501);
+  --color-mnd-green-500: oklch(64.288% 0.1561 145.501);
   --color-mnd-green-600: oklch(55.384% 0.13852 145.264);
   --color-mnd-green-700: oklch(44.636% 0.10421 145.788);
-  --color-mnd-green-800: oklch(40.500% 0.08476 146.473);
+  --color-mnd-green-800: oklch(40.5% 0.08476 146.473);
   --color-mnd-green-900: oklch(35.963% 0.07165 147.268);
   --color-mnd-green-950: oklch(24.196% 0.05017 147.246);
   --color-mnd-green: var(--color-mnd-green-700); /* #27632e - mnd green */
-  --color-mnd-green-dark: oklch(37.624% 0.08511 146.152); /* #1e4d24 - mnd green dark */
+  --color-mnd-green-dark: oklch(
+    37.624% 0.08511 146.152
+  ); /* #1e4d24 - mnd green dark */
 
   /*  */
 
