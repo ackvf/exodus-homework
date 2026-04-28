@@ -63,7 +63,95 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The rest of the API layer uses [tRPC](https://trpc.io/) for type-safe client-server communication. Manage tRPC routers in [`server/routers`](src/server/routers) and call them from the client using the auto-generated React hooks exported from [`lib/trpc.ts`](src/lib/trpc.ts).
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+The `pages/api` directory is mapped to `/api/*` urls. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+
+## Local Development with Docker Compose
+
+This repository defines two Docker services:
+
+- `flare-app` (Node 24, Next.js dev server)
+- `flare-db` (PostgreSQL 16)
+
+It supports three local development flows.
+
+- ~~Local app + external DB~~ _(TBD, pending remote db)_
+- Local app + local Docker DB
+- Full Docker stack with mounted local filesystem and live reload
+
+1. _Optionally:_ copy [`.env.example`](.env.example) to [`.env`](.env).
+
+### 1) Local app + external DB
+
+> \*! **note: this flow is not set up yet\***
+
+Develop the app locally and connect to a shared managed/remote database.
+
+2. Then run local Next.js development server:
+
+   ```bash
+   pnpm dev
+
+   # stop with Ctrl+C
+   ```
+
+### 2) Local app + local Docker DB
+
+Fast local app iteration with a disposable local database.
+
+2. Start local DB container and local dev:
+
+   ```bash
+   pnpm dev:db  # runs in background
+   pnpm dev
+
+   # stop app with Ctrl+C
+   # stop DB container with:
+   pnpm dev:db:stop
+   ```
+
+### 3) Full Docker stack (app + db)
+
+For maximum environment parity and hassle-free onboarding.
+
+In this flow, the app container **mounts** your **local project files**, so editing files in VS Code triggers Next.js live reloading/HMR inside the container.
+
+On Windows hosts, Docker bind mounts can miss filesystem events. Polling support is available as an opt-in override [below](#windows-polling-override).
+
+2. Start full docker stack with:
+
+   ```bash
+   pnpm dev:docker  # runs in background
+
+   # stop with:
+   pnpm dev:docker:stop
+   ```
+
+   _note: the frontend app may take some time to [start](http://localhost:3000/). View logs with `pnpm logs:app`._
+
+_note: this will create a large `.pnpm-store` folder in the project root because the whole project is mounted into the app container, which includes `node_modules` and pnpm store. It may take significant time on the first run because it needs to install all dependencies inside the container. Subsequent runs will be faster due to caching._
+
+#### Windows polling override
+
+If file changes on the host are not detected inside the app container on Windows, copy env variables for polling from [`.env.example`](.env.example).
+
+Alternative is to check out and use the repo in WSL. See https://code.visualstudio.com/docs/remote/wsl
+
+### Troubleshooting and Utility scripts
+
+The [.dockerignore](.dockerignore) file excludes all files except those needed for the app container, which may interfere with certain workflows and tools. If you need to include or exclude additional files add them and rebuild the app container with `pnpm dev:app:rebuild`.
+
+Since our docker setup runs in the background, use these scripts to follow logs in real time:
+
+- `pnpm logs`: follow logs for all compose services.
+- `pnpm logs:db`: follow only database logs.
+- `pnpm logs:app`: follow only app logs.
+
+Docker:
+
+- `pnpm dev:db:remove`: remove only `flare-db` container instance (use when container metadata/state is broken and you want a clean container).
+- `pnpm dev:db:reset`: remove `flare-db` data volume and recreate from scratch (use when you need a fully clean local database).
+- `pnpm dev:app:rebuild`: rebuild the `flare-app` image and recreate `flare-app` container (use after changing `Dockerfile`).
+- `pnpm dev:docker:cleanup`: remove the full compose stack, local compose images, and volumes (use when removing/reinstalling the repo).
 
 ## Agents
 

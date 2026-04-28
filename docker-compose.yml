@@ -1,0 +1,56 @@
+services:
+  flare-db:
+    container_name: flare-db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-flare}
+    ports:
+      - "5432:5432"
+    volumes:
+      - flare-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-flare}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  flare-app:
+    container_name: flare-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    init: true
+    depends_on:
+      flare-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+      CI: "true"
+      TURBOPACK_POLLING: ${TURBOPACK_POLLING:-false}
+      TURBOPACK_POLLING_INTERVAL: ${TURBOPACK_POLLING_INTERVAL:-1000}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@flare-db:5432/${POSTGRES_DB:-flare}
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/.next
+      - /app/.pnpm-store
+      - /app/node_modules
+    command:
+      [
+        "sh",
+        "-c",
+        "pnpm install --frozen-lockfile && pnpm dev --hostname 0.0.0.0 --port 3000",
+      ]
+
+volumes:
+  flare-db-data:

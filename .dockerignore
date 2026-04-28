@@ -1,0 +1,43 @@
+
+# Docker build context filter for the app image.
+#
+# Why this exists:
+# - Docker packages the build context as an archive before each image build.
+# - The build backend uses that context for Dockerfile file-copy steps (for example, COPY/ADD).
+# - Without this ignore file, local caches/metadata can make context huge and brittle.
+
+# Git and local metadata
+.git
+.git-worktrees
+.vscode
+.husky
+
+# Node / pnpm artifacts
+node_modules
+.pnpm-store
+
+# Build outputs
+.next
+out
+build
+coverage
+
+# Logs and cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.tsbuildinfo
+
+# Env and local files
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Optional docs/config not required to install and run app in container
+.agents
+ARCHITECTURE.md
