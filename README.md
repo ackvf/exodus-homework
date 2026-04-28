@@ -43,13 +43,16 @@ corepack prepare
 corepack up
 ```
 
-Then, install dependencies:
+Then, install dependencies and generate Prisma client:
 
 ```bash
 pnpm install
+pnpm db:generate
 ```
 
-And start the development server:
+_note: during installation, pnpm may warn you about ignored build scripts. Allow them by running `pnpm approve-builds`._
+
+And start the Next.js development server (without DB):
 
 ```bash
 pnpm dev
@@ -65,7 +68,7 @@ The rest of the API layer uses [tRPC](https://trpc.io/) for type-safe client-ser
 
 The `pages/api` directory is mapped to `/api/*` urls. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
 
-## Local Development with Docker Compose
+## Local Development with Docker Compose and PostgreSQL
 
 This repository defines two Docker services:
 
@@ -78,7 +81,11 @@ It supports three local development flows.
 - Local app + local Docker DB
 - Full Docker stack with mounted local filesystem and live reload
 
-1. _Optionally:_ copy [`.env.example`](.env.example) to [`.env`](.env).
+### First copy the [`.env.example`](.env.example) to [`.env`](.env):
+
+```bash
+cp .env.example .env
+```
 
 ### 1) Local app + external DB
 
@@ -86,6 +93,7 @@ It supports three local development flows.
 
 Develop the app locally and connect to a shared managed/remote database.
 
+1. Set `DATABASE_URL` in `.env` to the external database
 2. Then run local Next.js development server:
 
    ```bash
@@ -98,6 +106,7 @@ Develop the app locally and connect to a shared managed/remote database.
 
 Fast local app iteration with a disposable local database.
 
+1. Set `DATABASE_URL` in `.env` to your local Docker database
 2. Start local DB container and local dev:
 
    ```bash
@@ -115,8 +124,9 @@ For maximum environment parity and hassle-free onboarding.
 
 In this flow, the app container **mounts** your **local project files**, so editing files in VS Code triggers Next.js live reloading/HMR inside the container.
 
-On Windows hosts, Docker bind mounts can miss filesystem events. Polling support is available as an opt-in override [below](#windows-polling-override).
+_note: On Windows hosts, Docker bind mounts can miss filesystem events. Polling support is available as an opt-in override [below](#windows-polling-override)._
 
+1. Set `DATABASE_URL` in `.env` to your local Docker database
 2. Start full docker stack with:
 
    ```bash
@@ -128,7 +138,7 @@ On Windows hosts, Docker bind mounts can miss filesystem events. Polling support
 
    _note: the frontend app may take some time to [start](http://localhost:3000/). View logs with `pnpm logs:app`._
 
-_note: this flow creates large docker volumes for `.pnpm-store` and `node_modules`, see [docker-compose volumes](docker-compose.yml) for details. It may take significant time on the run and install. Subsequent runs will be faster due to caching. To "reinstall" `node_modules`, use `pnpm dev:app:reset`._
+_note: this flow creates large docker volumes for `.pnpm-store` and `node_modules`, see [docker-compose volumes](docker-compose.yml) for details. It may take significant time on the first run and install. Subsequent runs will be faster due to caching. To "reinstall" `node_modules`, use `pnpm dev:app:reset`._
 
 #### Windows polling override
 
@@ -142,7 +152,7 @@ This flow is not implemented, but it may solve live-reload issues by running the
 
 ### Troubleshooting and Utility scripts
 
-The [.dockerignore](.dockerignore) file excludes all files except those needed for the app container, which may interfere with certain workflows and tools. If you need to include or exclude additional files add them and rebuild the app container with `pnpm dev:app:rebuild`.
+The [.dockerignore](.dockerignore) file excludes all files except those needed for the app container, which may interfere with certain workflows and tools. If you need to include or exclude additional files, add them and rebuild the app container with `pnpm dev:app:rebuild`.
 
 Since our docker setup runs in the background, use these scripts to follow logs in real time:
 
@@ -157,6 +167,61 @@ Docker:
 - `pnpm dev:app:rebuild`: rebuild the `flare-app` image and recreate `flare-app` container (use after changing `Dockerfile`).
 - `pnpm dev:app:reset`: remove `flare-app` container and its volumes (use for package troubleshooting / clean install, equivalent to deleting `node_modules`).
 - `pnpm dev:docker:cleanup`: remove the full compose stack, local compose images, and volumes (use when removing/reinstalling the repo).
+
+Database:
+
+- `docker compose exec flare-db psql -U postgres -d flare -c "\dt"`: connect to DB container and list tables (verify DB has schema).
+
+## Database Migrations (Prisma)
+
+Prisma is used for schema management and migrations. The initial migration creates the `users` table with these columns:
+
+- `id` (UUID primary key)
+- `email` (unique)
+- `name`
+- `password`
+
+Create or apply migrations by name:
+
+```bash
+pnpm db:migrate --name <migration_name>
+```
+
+Use `db:migrate` when you changed Prisma schema in local development and want to create/apply a new migration.
+
+Apply already-created migration files:
+
+```bash
+pnpm db:migrate:deploy
+```
+
+Use `db:migrate:deploy` when migrations already exist in the repo and you only want to apply them (no new migration creation).
+
+Regenerate Prisma client:
+
+```bash
+pnpm db:generate
+```
+
+Use `db:generate` after dependency/schema changes when Prisma client types need to be refreshed without running a migration.
+
+Example workflows
+
+- When creating new migration:
+  1. Change Prisma schema in `prisma/schema.prisma`
+  2. Run `pnpm db:migrate --name add_new_table` to create and apply new migration
+  3. This will also regenerate Prisma client _(same as `pnpm db:generate`)_
+
+- When applying existing migrations after pulling changes:
+  1. Run `pnpm db:migrate:deploy` to apply all pending migrations
+  2. Run `pnpm db:generate` to refresh Prisma client types\
+     _(this is technically only needed if there were schema changes that affect types, but it's a good practice to run it to ensure types are up to date)_
+
+- When running in CI pipeline (clean environment without existing migrations):
+  1. Install dependencies (`pnpm install --frozen-lockfile`)
+  2. Ensure database is reachable and empty or at expected state
+  3. Run `pnpm db:migrate:deploy` to apply all migrations
+  4. Run `pnpm db:generate` to ensure Prisma client is up to date
 
 ## Agents
 

@@ -10,6 +10,7 @@ const eslintConfig = defineConfig([
   prettierConfig,
   // Override default ignores of eslint-config-next.
   globalIgnores([
+    ".git-worktrees/**",
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
